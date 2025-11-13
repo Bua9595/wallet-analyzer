@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="Analysiere Wallet-Aktivitäten schnell und übersichtlich." />
+  <title>Wallet Analyzer</title>
+  <style>
+    /* Minimal Fallback-Stil für Ladezustand/Hinweise */
+    html, body { height: 100%; margin: 0; }
+    #root { min-height: 100%; display: grid; place-items: center; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    .hint { max-width: 36rem; padding: 1rem 1.25rem; color: #0f172a; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: .75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    .hint h1 { margin: 0 0 .5rem; font-size: 1.125rem; }
+    .hint code { background: #e2e8f0; padding: .125rem .375rem; border-radius: .375rem; }
+  </style>
+  <noscript>
+    <style> #root { display: block; padding: 2rem; } </style>
+  </noscript>
+  <script>
+    // Set initial theme before UI paints
+    (function(){
+      try {
+        const pref = localStorage.getItem('theme');
+        const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (pref === 'dark' || (!pref && sysDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch {}
+    })();
+  </script>
+  <script>
+    // Zeige einen freundlichen Hinweis, wenn das Bundle nicht lädt (z.B. Datei direkt geöffnet)
+    window.addEventListener('DOMContentLoaded', () => {
+      const root = document.getElementById('root');
+      // Falls React das Attribut setzt, ist alles gut.
+      const showHint = () => {
+        if (root && !root.dataset.rendered) {
+          root.innerHTML = `
+            <div class="hint">
+              <h1>Leerer Bildschirm?</h1>
+              <p>Starte die Anwendung lokal mit <code>StartDev.cmd</code> (Doppelklick) und öffne <code>http://localhost:5173</code>.</p>
+              <p>Alternativ: <code>StartPreview.cmd</code> (baut & startet Preview) oder <code>ServeDist.cmd</code> (kleiner Static Server auf Port 8080).</p>
+              <p>Wenn weiterhin ein blanker Bildschirm erscheint, öffne die Entwicklerkonsole (F12) und teile die Fehlermeldung.</p>
+            </div>
+          `;
+        }
+      };
+      // Nach kurzer Zeit prüfen (falls /src/main.tsx im Dateisystem nicht geladen werden kann)
+      setTimeout(showHint, 1800);
+      // Auch auf globale Fehler reagieren
+      window.addEventListener('error', showHint, { once: true });
+      window.addEventListener('unhandledrejection', showHint, { once: true });
+    });
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+  
+</head>
+
+<body>
+  <div id="root">Lade…</div>
+</body>
+
+</html>
